@@ -1,0 +1,22 @@
+{
+    "name": "Ubuntu 22.04 Game Engine - Dev Container",
+    "image": "game-engine-dev",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "bash"
+            },
+            "extensions": [
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools"
+            ]
+        }
+    },
+    "postStartCommand": "bash",
+    "remoteUser": "user",
+    "runArgs": [
+        "-e", "DISPLAY=host.docker.internal:0.0",
+        "--rm",
+        "--name", "ubuntu-jammy-game-engine-dev"
+    ]
+}
