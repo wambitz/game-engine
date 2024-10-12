@@ -1,12 +1,12 @@
+// engine_core.h
 #include "engine_core.h"
+#include "render.h"
+#include "plugin.h"
 
 #include <dlfcn.h> // For dynamic loading
 #include <iostream>
 
 using namespace Engine;
-
-// Declaration of the dynamically linked render function
-extern "C" void render(); // Declaration of the render function from librender.so
 
 void EngineCore::initialize()
 {
