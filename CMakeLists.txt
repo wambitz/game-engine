@@ -12,11 +12,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 
+# Set the default build type to Debug if not set by user
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type (Debug/Release)" FORCE)
+endif()
+
 # Add compiler flags for debugging and optimizations
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
 
 # Enable Position Independent Code (PIC) for shared libraries
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# Include directories for the engine headers (like IPlugin.h, engine_core.h)
+include_directories(${PROJECT_SOURCE_DIR})
 
 # Create the shared library for render (equivalent to: g++ -fPIC -shared -o render.so render.cpp)
 add_library(render SHARED render.cpp)
@@ -44,3 +52,6 @@ set_target_properties(game_engine PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BI
 # This is equivalent to setting the LD_LIBRARY_PATH environment variable manually.
 # Add RPATH (Runpath) so that the executable can find the shared libraries in the same directory
 set_target_properties(game_engine PROPERTIES INSTALL_RPATH "$ORIGIN")
+
+# Custom message for debugging
+message(STATUS "CMake Build Type: ${CMAKE_BUILD_TYPE}")
