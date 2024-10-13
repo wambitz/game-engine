@@ -10,10 +10,31 @@
 // This ensures consistency and clarity, especially in larger projects where
 // someone might look at the source file directly without referencing the header.
 
-extern "C"{
+#include "plugin.h"
+#include <iostream>
 
-void helloPlugin() {
-    std::cout << "Hello from the dynamically loaded plugin (libplugin.so)" << std::endl;
+namespace PluginNamespace  {
+
+void Plugin::onLoad() {
+    std::cout << "Plugin loaded." << std::endl;
+}
+
+void Plugin::onUnload() {
+    std::cout << "Plugin unloaded." << std::endl;
+}
+
+void Plugin::execute() {
+    std::cout << "Plugin executing." << std::endl;
+}
+
+// Factory function implementation
+extern "C" 
+{
+
+Engine::IPlugin* createPlugin() {
+    return new Plugin();
 }
 
 } // extern "C"
+
+} // namespace PluginNamespace 

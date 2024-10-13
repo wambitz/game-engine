@@ -1,56 +1,76 @@
 // engine_core.h
+#include "IPlugin.h"  // Include full definition of IPlugin
 #include "engine_core.h"
 #include "render.h"
-#include "plugin.h"
 
 #include <dlfcn.h> // For dynamic loading
 #include <iostream>
 
-using namespace Engine;
+namespace Engine {
 
-void EngineCore::initialize()
-{
-    // TBD
+typedef IPlugin* (*CreatePluginFunc)();
+
+void EngineCore::initialize() {
+    // Initialize engine systems
+    std::cout << "Engine initialized." << std::endl;
 }
 
-void EngineCore::run()
-{
+void EngineCore::run() {
+
     // 1. Call the dynamically linked library (librender.so)
     std::cout << "Calling the dynamically linked library (Render Engine):" << std::endl;
-    render(); // Call the function from librender.so
+    render();  // Direct call to render function
 
-    // 2. Dynamically load the plugin (libplugin.so) at runtime
-    std::cout << "\nLoading the plugin dynamically at runtime:" << std::endl;
-    void* handle = dlopen("./libplugin.so", RTLD_LAZY); // Load the plugin
-    if (!handle)
-    {
-        std::cerr << "Cannot open library: " << dlerror() << std::endl;
-        // return 1;
+    // Load the plugin
+    loadPlugin("./libplugin.so");
+
+    if (plugin_) {
+        // Call the plugin's onLoad method
+        plugin_->onLoad();
+
+        // Main loop (simplified)
+        std::cout << "Engine running..." << std::endl;
+        plugin_->execute();
+
+        // Call the plugin's onUnload method
+        plugin_->onUnload();
+    }
+}
+
+void EngineCore::shutdown() {
+    // Clean up and close the plugin
+    if (plugin_) {
+        plugin_.reset();
+    }
+    if (pluginHandle_) {
+        dlclose(pluginHandle_);
+        pluginHandle_ = nullptr;
+    }
+    std::cout << "Engine shutdown." << std::endl;
+}
+
+void EngineCore::loadPlugin(const std::string& pluginPath) {
+    pluginHandle_ = dlopen(pluginPath.c_str(), RTLD_LAZY);
+    if (!pluginHandle_) {
+        std::cerr << "Cannot open plugin library: " << dlerror() << std::endl;
+        return;
     }
 
     // Reset errors
     dlerror();
 
-    // Load the symbol (helloPlugin function)
-    typedef void (*hello_t)();
-    hello_t helloPlugin = (hello_t)dlsym(handle, "helloPlugin");
-
-    const char* dlsym_error = dlerror();
-    if (dlsym_error)
-    {
-        std::cerr << "Cannot load symbol 'helloPlugin': " << dlsym_error << std::endl;
-        dlclose(handle);
-        // return 1;
+    // Load the factory function
+    CreatePluginFunc createPlugin = (CreatePluginFunc)dlsym(pluginHandle_, "createPlugin");
+    const char* dlsymError = dlerror();
+    if (dlsymError) {
+        std::cerr << "Cannot load symbol 'createPlugin': " << dlsymError << std::endl;
+        dlclose(pluginHandle_);
+        pluginHandle_ = nullptr;
+        return;
     }
 
-    // Call the plugin function
-    helloPlugin();
-
-    // Close the library
-    dlclose(handle);
+    // Create an instance of the plugin
+    plugin_.reset(createPlugin());
 }
 
-void EngineCore::shutdown()
-{
-    // TBD
-}
+} // namespace Engine
