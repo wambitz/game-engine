@@ -9,9 +9,11 @@
 
 #include "IPlugin.h"
 
-namespace PluginNamespace  {
+namespace PluginNamespace
+{
 
-class Plugin : public Engine::IPlugin {
+class Plugin : public Engine::IPlugin
+{
 public:
     Plugin() = default;
     ~Plugin() override = default;
@@ -22,8 +24,9 @@ public:
 };
 
 // Factory function for creating a plugin instance
-extern "C" {
+extern "C"
+{
     Engine::IPlugin* createPlugin();
 }
 
-} // namespace PluginNamespace 
+} // namespace PluginNamespace

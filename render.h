@@ -1,9 +1,10 @@
 // render.h
 #pragma once
 
-namespace Engine {
+namespace Engine
+{
 
 // Declaration of the render function
 void render();
 
-}  // namespace Engine
+} // namespace Engine

@@ -2,7 +2,8 @@
 // main.cpp
 #include "engine_core.h"
 
-int main() {
+int main()
+{
     Engine::EngineCore engine;
 
     // Initialize the engine

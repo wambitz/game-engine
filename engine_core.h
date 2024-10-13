@@ -1,13 +1,14 @@
-//engine_core.h
+// engine_core.h
 #pragma once
 
 #include "IPlugin.h"
 #include <memory>
 
-namespace Engine {
+namespace Engine
+{
 
-
-class EngineCore {
+class EngineCore
+{
 public:
     void initialize();
     void run();

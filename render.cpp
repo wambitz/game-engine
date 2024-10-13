@@ -2,10 +2,9 @@
 #include "render.h"
 #include <iostream>
 
-namespace Engine {
+namespace Engine
+{
 
-void render() {
-    std::cout << "Rendering from the dynamically linked library (librender.so)" << std::endl;
-}
+void render() { std::cout << "Rendering from the dynamically linked library (librender.so)" << std::endl; }
 
-}  // namespace Engine
+} // namespace Engine

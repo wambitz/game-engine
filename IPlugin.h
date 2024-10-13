@@ -1,8 +1,11 @@
+//IPlugin.h
 #pragma once
 
-namespace Engine {
+namespace Engine
+{
 
-class IPlugin {
+class IPlugin
+{
 public:
     virtual ~IPlugin() = default;
     virtual void onLoad() = 0;
